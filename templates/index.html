@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" id="styleguide">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>VPT</title>
+
+        <link rel="stylesheet" href="static/css/animate.css">
+        <link rel="stylesheet" href="static/css/cui-styleguide.min.css">
+        <link rel="stylesheet" href="static/css/featherlight.min.css">
+        <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+
+        <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+        <script src="static/js/styleguide.js"></script>
+        <script src="static/js/jquery-scrollto.js"></script>
+        <script src="static/js/clipboard.js"></script>
+        <script src="static/js/featherlight.min.js"></script>
+        <script src="static/js/Markdown.Converter.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+        <!--Function to populate values into textboxes and enable buttons-->
+        <script>
+            function showVal(s){
+                           boolVal = s[s.selectedIndex].id
+                           policyId = s[s.selectedIndex].value
+                           policyName = s[s.selectedIndex].text
+                           document.getElementById("hiddenPolicyName1").value = policyName;
+                           document.getElementById("hiddenPolicyName2").value = policyName;
+                           document.getElementById("policyId1").value = policyId;
+                           document.getElementById("policyId2").value = policyId;
+                           document.getElementById('startTime').value = Date();
+                           if (boolVal == "False"){
+                                document.getElementById("startTime").disabled = false;
+                                document.getElementById("endTime").disabled = false;
+                                document.getElementById("deactivate").disabled = true;
+                                document.getElementById("activate").disabled = false;
+                           }else{
+                                document.getElementById("startTime").disabled = true;
+                                document.getElementById("endTime").disabled = true;
+                                document.getElementById("activate").disabled = true;
+                                document.getElementById("deactivate").disabled = false;
+                           }
+                        }
+            function startTime() {
+                           var today = new Date();
+                           var h = today.getHours();
+                           var m = today.getMinutes();
+                           var s = today.getSeconds();
+                           m = checkTime(m);
+                           s = checkTime(s);
+                           document.getElementById('txt').innerHTML =
+                           h + ":" + m + ":" + s;
+                           var t = setTimeout(startTime, 500);
+                          }
+                          function checkTime(i) {
+                            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+                            return i;
+                          }
+        </script>
+    </head>
+    <body class="cui styleguide" onload="startTime()">
+
+        <div class="content-fluid">
+            <nav id="styleguideSidebar" class="sidebar">
+                <div class="sidebar__header">
+                    <div class="sidebar__header-title">VPT</div>
+                </div>
+                <ul id="rootSidebar" data-kss-ref="styleguide.homepage">
+                    <li class="sidebar__item" id="section-gettingStarted">
+                        <a>Home</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <main>
+                <header id="styleguideHeader" class="header header--compressed">
+                    <div class="header-bar container">
+                        <a class="btn btn--small btn--icon toggle-menu">
+                            <span class="icon-list-menu"></span>
+                        </a>
+                        <div class="header-bar__main">
+                            <div class="header-heading">
+                                <h1 class="page-title">Viptela Policy Toggle</h1>
+                            </div>
+
+                        </div>
+                        <div class="header-toolbar">
+                            <form action="/logout" method="POST">
+                                <a title="Logout" onclick="$(this).closest('form').submit()">
+                                    <span class="icon-power icon-medium"></span>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </header>
+                <div class="content">
+                <div class="hero hero--indigo"></div>
+                    <div class="container">
+                            <div class="section">
+                                    <!--Alert message div-->
+                                    <div class="row" id="alertid">
+                                        {% with messages = get_flashed_messages(with_categories=true) %}
+                                          {% if messages %}
+                                            {% for category, message in messages %}
+                                              <div class="alert alert--{{ category }} alert-dismissible" onclick="window.location.reload()">
+                                                    <div class="alert__icon icon-check"></div>
+                                                    <div class="alert__message">{{message}}</div>
+                                                    <div class="alert_close icon-close" data-dismiss="alert"></div>
+                                              </div>
+                                            {% endfor %}
+                                          {% endif %}
+                                        {% endwith %}
+
+                                        {% block body %}{% endblock %}
+                                    </div>
+                            <div class="secondary-tabs">
+                                <ul class="tabs tabs--tall">
+                                    <li id="tab-top" class="tab active">
+                                        <a><div class="tab-heading" title="togPolicy">&nbsp;&nbsp;Dashboard&nbsp;&nbsp;</div></a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="tab-top-content" class="tab-pane active">
+                                    <!--Toggle Policy-->
+                                    <div class="panel panel--loose panel--bordered">
+                                            <div class="row">
+                                            <div class="col-md-5"><h6>Toggle Policy</h6></div>
+                                            <div class="col-md-6 text-right" style="font-size:25px;" id="txt"></div>
+                                            <a onClick="window.location.reload()" title="Reload" style="float:right;"><span class="icon-refresh icon-medium" ></span></a>
+                                            </div>
+                                                <div class="divider divider--thicker"></div>
+                                            <form action="/activate" method="POST">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group__text select" style="margin-top:9px;">
+                                                            <select name="selectPolicy" id="selectPolicy" onchange="showVal(this)" required>
+                                                                <option value="0" selected>Select Policy</option>
+                                                                {% for o in data %}
+                                                                    <option value="{{ o[1] }}" id="{{ o[2] }}">{{ o[0] }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <label for="selectPolicy">Policy: &nbsp </label>
+                                                            <div class="required-block">
+                                                                <span class="icon-asterisk"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                     <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-group__text">
+                                                                <input id="startTime" name="nameStartTime" type="time">
+                                                                <label for="startTime">Start Time(H:M:AM/PM):</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-group__text">
+                                                                <input id="date" name="activateDate" type="date">
+                                                                <label for="date">Date:</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-group__text">
+                                                                <input id="endTime" name="nameEndTime" type="time">
+                                                                <label for="endTime">End Time(H:M:AM/PM):</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <br>
+                                                    <!--Hidden form elements to store policy name and ID-->
+                                                    <input name="hiddenPolicyName1" id="hiddenPolicyName1" type="hidden">
+                                                    <input name="policyIdName1" id="policyId1" type="hidden">
+                                                    <div class="col-md-12" style="text-align: center;">
+                                                        <br>
+                                                        <button type = "submit" style="width:100%;" class="btn btn--primary" id="activate">Activate</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!--Deactivate-->
+                                            <form action="/deactivate" method="POST">
+                                                <div class="row">
+                                                    <input name="policyIdName2" id="policyId2" type="hidden">
+                                                    <input name="hiddenPolicyName2" id="hiddenPolicyName2" type="hidden">
+                                                    <div class="col-md-12" style="text-align: center;">
+                                                       <button type = "submit" style="width:100%;" class="btn btn--secondary" id="deactivate">Deactivate</button>
+                                                    </div>
+                                                <br />
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+
+
+</html>
