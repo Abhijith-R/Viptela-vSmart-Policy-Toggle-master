@@ -1,3 +1,5 @@
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/gve-sw/Viptela-vSmart-Policy-Toggle-master)
+
 # Viptela vSmart policy Automation
 Viptela has a set of APIs which can be used to integrate its functionalities with other solutions. This Proof of Value demonstrates the use of vManage APIs to automate the activation and deactivation of a vSmart policy based on a preset time and date.
 
