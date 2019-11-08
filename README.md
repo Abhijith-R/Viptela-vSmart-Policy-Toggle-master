@@ -24,7 +24,7 @@ Viptela has a set of APIs which can be used to integrate its functionalities wit
 
 ## Screenshot
 
-![alt text](https://github.com/gve-sw/Viptela-vSmart-Policy-Toggle-master/blob/master/Policy_toggle.png)
+![alt text](https://github.com/Abhijith-R/Viptela-vSmart-Policy-Toggle-master/blob/master/Policy_toggle.png)
 
 
 #### API Reference/Documentation:
